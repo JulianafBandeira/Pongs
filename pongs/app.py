@@ -70,6 +70,11 @@ def user():
     return render_template('usuario.html')
 ##########
 
+@app.route('/pet')
+def pet():
+    return render_template('pet.html')
+
+
 
 @app.route("/logout")
 # @login_required

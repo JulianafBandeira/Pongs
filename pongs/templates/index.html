@@ -8,6 +8,7 @@
     {% else %}
     <p>Bem vindo(a)! {{current_user.username}}</p>
     <a href="{{ url_for('logout') }}">Sair</a>
+    <a href="{{url_for('pet')}}"></a>
     {% endif %}
     
   </div>
