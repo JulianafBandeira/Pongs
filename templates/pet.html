@@ -4,20 +4,23 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Meus Pets</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
    
 <Style>
 div{
- margin: auto;
- margin-top: 10%;
+ margin-left: 0.2%;
+ margin-top: 1%;
+ padding: 0%;
+ border-radius: 8px;
  
 }
 a{
 
 float: right;
+margin: 0.3%;
 
 }
 
@@ -26,11 +29,14 @@ float: right;
     bottom: 0;
     background-color: #4CAF50;
     width: 100%;
-    height: 40px;
+    height: 30px;
   }
   footer, a{
     text-align: center;
     margin-top: 2px;
+  }
+  .card{
+    border-radius: 25px;
   }
    
 </Style> 
@@ -39,23 +45,22 @@ float: right;
 <body>
     <header>
         <nav class="navbar navbar-dark bg-inverse" style="background-color:#4CAF50;">
-          <a class="navbar-brand" href="#">Tela Pet</a>
+          <a class="navbar-brand" href="#">Meus pets</a>
         </nav>
       </header>  
-
-        <div class="col-sm-6">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Special title treatment</h5>
-              <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            
-              <a  href="#"style="background-color:red" class="btn btn-info">Deletar</a>
-              <a  href="#"style="background-color:#ffd700" class="btn btn-info">Atualizar</a>
-              <a  href="#"style="background-color:blue" class="btn btn-info">Editar</a>
-            </div>
-          </div>
+    {% for pet in allpets %}
+    <div class="card w-50">
+        <div class="card-body">
+          <h5 class="card-title">PET INFO.: {{pet.nome}}</h5>
+          <p class="card-text">Idade: {{pet.idade}}</p>
+          <p class="card-text">Espécie: {{pet.especie}}</p>
+          <p class="card-text">Observações: {{pet.observacoes}}</p>
+          <a href="{{ url_for('deletePet') }}" class="btn btn-danger">Deletar</a>
+          <a href="#" class="btn btn-primary">Editar</a>
+          
         </div>
-      </div>
+    </div>
+    {% endfor %}
 <footer>
 <a href=""style="background-color:#4CAF50"></a>
 </footer>
