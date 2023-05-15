@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meus Pets</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" media="screen" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+ <Style>
+    div {
+      margin-left: 0.2%;
+      margin-top: 1%;
+      padding: 0%;
+      border-radius: 8px;
+
+    }
+
+    .card {
+      border-radius: 15px;
+      border-color: rgb(184, 178, 178);
+    }
+
+    p {
+      margin: 0%;
+    }
+
+    a {
+
+      float: right;
+      margin: 0.3%;
+
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      background-color: #4CAF50;
+      width: 100%;
+      height: 30px;
+    }
+
+    footer,
+    a {
+      text-align: center;
+      margin-top: 2px;
+    }
+    
+  </Style>
+</head>
+
+<body>
+  <header>
+    <nav class="navbar navbar-dark bg-inverse" style="background-color:#4CAF50;">
+      <a class="navbar-brand" href="#">Meus Pets</a>
+    </nav>
+  </header>
+  {% for pet in pets %}
+  <div class="card w-50">
+    <div class="card-body">
+      <h5 class="card-title">PET INFO.: {{pet.nome}}</h5>
+      <hr style="height:1px;border-width:0;color:rgb(0, 0, 0);background-color:rgb(0, 0, 0)">
+      <p class="card-text">Idade: {{pet.idade}} ano(s)</p>
+      <p class="card-text">Espécie: {{pet.especie}}</p>
+      <p class="card-text">Observações: {{pet.observacoes}}</p>
+      <a href="{{ url_for('deletePet') }}" class="btn btn-danger">Deletar</a>
+      <a href="" class="btn btn-primary" data-toggle="modal" data-target="#meuModal">Editar</a>
+    </div>
+  </div>
+  
+
+  <div id="meuModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Título do modal</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+          <p>Conteúdo no corpo do modal.</p>
+          <p>Aqui você pode inserir todo o conteúdo necessário.</p>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+          <button type="button" class="btn btn-primary">Salvar Alterações</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  {% endfor %}
+  <br>
+  <h4 style="color: rgb(50, 50, 224); text-align: center; display: inline-block; margin-left: 50%; text-decoration: none;"><a href="{{ url_for('home') }}">Voltar</a></h4>
+  <br>
+  <br>
+  <footer>
+    <a href="" style="background-color:#4CAF50"></a>
+  </footer>
+
+</body>
+
+</html>

@@ -6,9 +6,10 @@ from flask_session import Session
 from flask_login import LoginManager, login_manager, current_user, login_required, login_user, logout_user
 from flask import Flask, render_template, flash, redirect, url_for, request
 from forms.forms import FormularioRegistro, FormularioLogin, FormularioPet
-from models.user import User
-from models.pet import Pets
 from helpers.database import migrate, db
+
+from models.user import User
+from models.pet import Pet
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -26,22 +27,25 @@ migrate.init_app(app, db)
 
 @app.before_first_request
 def create_database():
-     db.create_all()
+    db.create_all()
 
 
 @login_manager.user_loader
 def load_user(user_id):
-     return User.query.get(user_id) 
+    return User.query.get(user_id)
+
 
 @app.route('/home')
 def home():
     return render_template('user.html')
 
-@app.route('/register', methods = ['POST','GET'])
+
+@app.route('/register', methods=['POST', 'GET'])
 def register():
     form = FormularioRegistro()
     if form.validate_on_submit():
-        user = User(nome=form.nome.data, email=form.email.data, endereco=form.endereco.data, senha_hash=form.senha1.data)
+        user = User(nome=form.nome.data, email=form.email.data,
+                    endereco=form.endereco.data, senha_hash=form.senha1.data)
         user.set_senha(form.senha1.data)
         db.session.add(user)
         db.session.commit()
@@ -58,7 +62,7 @@ def login():
             login_user(user)
             proximo = request.args.get("proximo")
             return redirect(proximo or url_for('home'))
-        flash('Endereço de email e/ou senha inválidos.')    
+        flash('Endereço de email e/ou senha inválidos.')
     return render_template('login.html', form=form)
 
 
@@ -67,82 +71,44 @@ def login():
 def protected():
     return redirect(url_for('forbidden.html'))
 
+
 @app.route("/logout")
 # @login_required
 def logout():
     logout_user()
     return redirect(url_for('home'))
 
-@app.route('/cadastrarpet', methods=['GET', 'POST'])
+
+@app.route('/pet', methods=['GET', 'POST'])
 def cadastroPet():
     form = FormularioPet()
     if form.validate_on_submit():
         user_id = current_user.id
-        pet = Pets(nome=form.nomePet.data, idade=form.idade.data, especie=form.especie.data, observacoes=form.observacoes.data, user_id=user_id)
+        user = User.query.get(user_id)
+        pet = Pet(nome=form.nomePet.data, idade=form.idade.data,
+                  especie=form.especie.data, observacoes=form.observacoes.data, user=user)
         db.session.add(pet)
         db.session.commit()
         return redirect(url_for('home'))
     return render_template('cadastropet.html', form=form)
 
-# def check_pet():
-#     allpets = Pets.query.all()
-#     lista_pets = []
-#     if pets in allpets:
-#         pet_info = {
-#             'id': pets.id,
-#             'nome': pets.nome,
-#             'idade': pets.idade,
-#             'especie': pets.especie,
-#             'observacoes': pets.observacoes
-#         }
-#         lista_pets.append(pet_info)
-        
-#         flash('Pet já cadastrado.')
-#         return redirect(url_for('cadastroPet'))
 
-
-@app.route('/allpets/', methods=['GET', 'POST'])
+@app.route('/pets', methods=['GET'])
 @login_required
 def getPet():
-    #ID USER CAPTURADO
     if current_user.is_authenticated:
-        user = User()
-        user.current_user_id = current_user.id
-        current_user_id = user.current_user_id
-        #pegando ID via-current_id
-        # user1 = User.query.get(current_user_id)
-
-        # pet_test = Pets()
-        # user = pet_test.user1
-        # pet_user_id_ = Pets.query.get(user)
-
-        pet = Pets()
-        #LISTA DE PETS
-        allpets = Pets.query.all()
-
-        lista_pets = []
-        for pet in allpets:
-
-            pet_info = {
-                'id': pet.id,
-                'nome': pet.nome,
-                'idade': pet.idade,
-                'especie': pet.especie,
-                'observacoes': pet.observacoes
-            }
-            lista_pets.append(pet_info)
-
-            #return redirect(f'/allpets/{pet_user_id_}')
-        return render_template('pet.html', allpets=lista_pets)
+        user_id = current_user.id
+        # Listar os pets do usuário logado
+        pets = Pet.query.filter_by(user_id=user_id).all()
+        return render_template('pets.html', pets=pets)
 
 
-@app.route('/allpets/', methods=['POST'])
+@app.route('/pets/', methods=['DELETE'])
 @login_required
-
 def deletePet():
     if current_user.is_authenticated:
 
-        pet = Pets.query.first()
+        pet = Pet.query.first()
         if pet:
             # db.session.delete(pet)
             # db.session.commit()
@@ -152,8 +118,6 @@ def deletePet():
             return flash('Nao encontrado')
     else:
         return redirect(url_for('forbidden'))
-
-
 
 
 if __name__ == "__main__":
